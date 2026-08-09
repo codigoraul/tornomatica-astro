@@ -8,6 +8,8 @@
  * El SVG es 274×85 (proporción 3,2:1). Se controla con la altura.
  */
 
+import { ruta } from "../lib/url";
+
 interface Props {
   variante?: "color" | "blanco";
   clase?: string;
@@ -18,7 +20,7 @@ const archivo = variante === "blanco" ? "/logo-tornomatica-blanco.svg" : "/logo-
 ---
 
 <img
-  src={archivo}
+  src={ruta(archivo)}
   alt="Tornomatica — fabricación de partes y piezas"
   width="274"
   height="85"

@@ -20,7 +20,7 @@ import { ruta } from "../lib/url";
         galeria.slice(0, 4).map((g) => (
           <div class="aspect-square overflow-hidden rounded-xl bg-slate-100">
             <img
-              src={g.src}
+              src={ruta(g.src)}
               alt={g.alt}
               loading="lazy"
               decoding="async"

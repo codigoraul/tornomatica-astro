@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import PageHero from "../components/PageHero.astro";
 import CtaFinal from "../components/CtaFinal.astro";
 import { galeria } from "../data/site";
+import { ruta } from "../lib/url";
 ---
 
 <Layout
@@ -30,7 +31,7 @@ import { galeria } from "../data/site";
                 aria-label={`Ampliar: ${g.alt}`}
               >
                 <img
-                  src={g.src}
+                  src={ruta(g.src)}
                   alt={g.alt}
                   loading={i < 3 ? "eager" : "lazy"}
                   decoding="async"
