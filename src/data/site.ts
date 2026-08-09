@@ -31,7 +31,7 @@ export const nav = [
   { label: "Contacto", href: "/contacto" },
 ];
 
-const WP = "http://www.tornomatica.cl/wp-content/uploads";
+const WP = "https://tornomatica.cl/admin/wp-content/uploads";
 
 export interface Slide {
   src: string;
@@ -55,7 +55,7 @@ export const slides: Slide[] = [
     cta: { label: "Solicitar cotización", href: "/contacto" },
   },
   {
-    src: "/hero/hero-2.jpg",
+    src: `${WP}/_slide_big_image/237-1305040114.jpg`,
     alt: "Proceso de torneado",
     kicker: "Proceso productivo",
     titulo: "De tu plano a la pieza",
@@ -65,7 +65,7 @@ export const slides: Slide[] = [
     cta: { label: "Conocer el proceso", href: "/proceso-productivo" },
   },
   {
-    src: "/hero/hero-3.jpg",
+    src: `${WP}/_slide_big_image/238-1295963548.jpg`,
     alt: "Control dimensional de piezas",
     kicker: "Control de calidad",
     titulo: "Verificación dimensional",
@@ -138,13 +138,13 @@ export const equipos = [
 ];
 
 export const galeria = [
-  { src: "/galeria/235-1402279071.jpg", alt: "Piezas mecanizadas" },
-  { src: "/galeria/236-1305040211.jpg", alt: "Tornos automáticos de levas Traub" },
-  { src: "/galeria/237-1305040114.jpg", alt: "Torneado" },
-  { src: "/galeria/238-1295963548.jpg", alt: "Control dimensional" },
-  { src: "/galeria/337-1402279103.jpg", alt: "Pernos y niples mecanizados en serie" },
-  { src: "/galeria/333-1402279480-thumb.jpg", alt: "Torno CNC" },
-  { src: "/galeria/240-1305041936-thumb.jpg", alt: "Buje bisagra" },
+  { src: `${WP}/_slide_big_image/235-1402279071.jpg`, alt: "Piezas mecanizadas" },
+  { src: `${WP}/_slide_big_image/236-1305040211.jpg`, alt: "Tornos automáticos de levas Traub" },
+  { src: `${WP}/_slide_big_image/237-1305040114.jpg`, alt: "Torneado" },
+  { src: `${WP}/_slide_big_image/238-1295963548.jpg`, alt: "Control dimensional" },
+  { src: `${WP}/_slide_big_image/337-1402279103.jpg`, alt: "Pernos y niples mecanizados en serie" },
+  { src: `${WP}/_portfolio_image/333-1402279480-thumb.jpg`, alt: "Torno CNC" },
+  { src: `${WP}/_portfolio_image/240-1305041936-thumb.jpg`, alt: "Buje bisagra" },
 ];
 
 /* ---------- Quiénes somos ---------- */
