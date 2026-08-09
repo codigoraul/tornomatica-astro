@@ -1,0 +1,217 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import CtaFinal from "../../components/CtaFinal.astro";
+import { getPiezas } from "../../lib/piezas";
+import { ruta } from "../../lib/url";
+import type { Pieza } from "../../data/site";
+
+export async function getStaticPaths() {
+  const { piezas } = await getPiezas();
+
+  return piezas.map((p) => ({
+    params: { slug: p.slug },
+    props: { pieza: p, piezas },
+  }));
+}
+
+interface Props {
+  pieza: Pieza;
+  piezas: Pieza[];
+}
+
+const { pieza, piezas } = Astro.props;
+
+const relacionadas = piezas.filter((p) => p.slug !== pieza.slug).slice(0, 4);
+---
+
+<Layout
+  titulo={`${pieza.nombre} | Tornomatica`}
+  descripcion={`Ficha técnica de ${pieza.nombre}. ${pieza.material ? `Material: ${pieza.material}.` : ""} Fabricación de partes y piezas de precisión en Tornomatica.`}
+>
+  <section class="bg-steel-950 text-white">
+    <div class="mx-auto max-w-7xl px-6 py-8">
+      <nav aria-label="Migas de pan">
+        <ol class="flex flex-wrap items-center gap-2 text-[12px] text-slate-500">
+          <li><a href={ruta("/")} class="transition hover:text-slate-300">Inicio</a></li>
+          <li aria-hidden="true" class="text-slate-700">/</li>
+          <li><a href={ruta("/productos")} class="transition hover:text-slate-300">Productos</a></li>
+          <li aria-hidden="true" class="text-slate-700">/</li>
+          <li class="text-slate-400">{pieza.nombre}</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-24">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid gap-12 lg:grid-cols-2">
+        <div class="flex aspect-4/3 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
+          {
+            pieza.imagen ? (
+              <img
+                src={pieza.imagen}
+                alt={pieza.nombre}
+                decoding="async"
+                class="h-full w-full object-cover"
+              />
+            ) : (
+              <span class="flex flex-col items-center gap-3 text-slate-400">
+                <svg
+                  class="h-16 w-16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path d="M3 3h18v18H3z" />
+                  <path d="M3 9h18M9 3v18" />
+                  <circle cx="15.5" cy="14.5" r="2.5" />
+                </svg>
+                <span class="text-[12px] tracking-widest uppercase">Plano técnico</span>
+              </span>
+            )
+          }
+        </div>
+
+        <div class="flex flex-col justify-center">
+          {pieza.codigo && <p class="font-mono text-sm text-slate-500">{pieza.codigo}</p>}
+
+          <h1 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{pieza.nombre}</h1>
+
+          {(pieza.material || pieza.medida) && (
+            <dl class="mt-8 divide-y divide-slate-200 border-t border-b border-slate-200">
+              {pieza.material && (
+                <div class="flex justify-between gap-4 py-3">
+                  <dt class="text-slate-500">Material</dt>
+                  <dd class="text-right font-medium text-slate-800">{pieza.material}</dd>
+                </div>
+              )}
+              {pieza.medida && (
+                <div class="flex justify-between gap-4 py-3">
+                  <dt class="text-slate-500">Medida</dt>
+                  <dd class="text-right font-medium text-slate-800">{pieza.medida}</dd>
+                </div>
+              )}
+            </dl>
+          )}
+
+          {pieza.porConfirmar && (
+            <p class="mt-6 rounded-lg bg-amber-50 px-4 py-3 text-[13px] text-amber-900">
+              Ficha pendiente de confirmar con el cliente.
+            </p>
+          )}
+
+          <p class="mt-8 leading-relaxed text-slate-700">
+            Pieza fabricada según plano y especificación del cliente. Si necesitas una variante de
+            medida, material o acabado, cuéntanos los detalles y te cotizamos.
+          </p>
+
+          <div class="mt-8 flex flex-wrap gap-3">
+            {pieza.pdf && (
+              <a
+                href={pieza.pdf}
+                target="_blank"
+                rel="noopener"
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-6 py-3.5 font-semibold text-slate-800 transition hover:bg-slate-50"
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3" />
+                </svg>
+                Ver plano (PDF)
+              </a>
+            )}
+            <a
+              href={ruta("/contacto")}
+              class="inline-flex items-center gap-2 rounded-lg bg-steel-950 px-6 py-3.5 font-semibold text-white transition hover:bg-steel-800"
+            >
+              Consultar por esta pieza
+            </a>
+          </div>
+
+          <a
+            href={ruta("/productos#piezas")}
+            class="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-brand-600 transition hover:text-brand-500"
+          >
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" />
+            </svg>
+            Volver al catálogo
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    relacionadas.length > 0 && (
+      <section class="border-t border-slate-200 bg-slate-50 py-20">
+        <div class="mx-auto max-w-7xl px-6">
+          <h2 class="text-2xl font-semibold tracking-tight">Otras piezas</h2>
+
+          <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {relacionadas.map((p) => (
+              <li>
+                <a
+                  href={ruta(`/productos/${p.slug}`)}
+                  class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:border-brand-500 hover:shadow-md"
+                >
+                  <div class="flex aspect-4/3 items-center justify-center overflow-hidden bg-slate-100">
+                    {p.imagen ? (
+                      <img
+                        src={p.imagen}
+                        alt={p.nombre}
+                        loading="lazy"
+                        decoding="async"
+                        class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <span class="flex flex-col items-center gap-2 text-slate-400">
+                        <svg
+                          class="h-8 w-8"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 3h18v18H3z" />
+                          <path d="M3 9h18M9 3v18" />
+                          <circle cx="15.5" cy="14.5" r="2.5" />
+                        </svg>
+                        <span class="text-[10px] tracking-widest uppercase">Plano técnico</span>
+                      </span>
+                    )}
+                  </div>
+                  <div class="p-5">
+                    <h3 class="text-[15px] leading-snug font-bold">{p.nombre}</h3>
+                    {p.codigo && <p class="mt-1 font-mono text-[11px] text-slate-500">{p.codigo}</p>}
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <CtaFinal
+    titulo="¿Tu pieza no está en la lista?"
+    bajada="Fabricamos según plano o muestra. Cuéntanos material, cantidad y tolerancias."
+  />
+</Layout>

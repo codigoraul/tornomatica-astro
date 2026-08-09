@@ -1,0 +1,36 @@
+---
+import { site } from "../data/site";
+import { ruta } from "../lib/url";
+
+interface Props {
+  titulo?: string;
+  bajada?: string;
+}
+const {
+  titulo = "¿Necesitas fabricar una pieza?",
+  bajada = "Envíanos el plano o una muestra e indícanos material y cantidad. Te respondemos con cotización y plazo.",
+} = Astro.props;
+---
+
+<section class="border-t border-slate-200 bg-slate-50 py-20">
+  <div class="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 px-6 lg:flex-row lg:items-center">
+    <div>
+      <h2 class="text-3xl font-semibold tracking-tight">{titulo}</h2>
+      <p class="mt-3 max-w-xl leading-relaxed text-slate-700">{bajada}</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <a
+        href={ruta("/contacto")}
+        class="rounded-lg bg-steel-950 px-7 py-3.5 font-semibold text-white transition hover:bg-steel-800"
+      >
+        Solicitar cotización
+      </a>
+      <a
+        href={site.telefonoHref}
+        class="rounded-lg border border-slate-300 px-7 py-3.5 font-semibold text-slate-800 transition hover:bg-white"
+      >
+        {site.telefono}
+      </a>
+    </div>
+  </div>
+</section>

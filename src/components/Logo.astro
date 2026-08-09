@@ -1,0 +1,26 @@
+---
+/**
+ * Logotipo Tornomatica.
+ *
+ *   variante="color"   → para fondos claros (header)
+ *   variante="blanco"  → para fondos oscuros (footer)
+ *
+ * El SVG es 274×85 (proporción 3,2:1). Se controla con la altura.
+ */
+
+interface Props {
+  variante?: "color" | "blanco";
+  clase?: string;
+}
+const { variante = "color", clase = "h-9" } = Astro.props;
+
+const archivo = variante === "blanco" ? "/logo-tornomatica-blanco.svg" : "/logo-tornomatica.svg";
+---
+
+<img
+  src={archivo}
+  alt="Tornomatica — fabricación de partes y piezas"
+  width="274"
+  height="85"
+  class:list={["w-auto", clase]}
+/>

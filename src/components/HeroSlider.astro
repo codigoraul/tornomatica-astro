@@ -1,0 +1,271 @@
+---
+import { slides } from "../data/site";
+import { ruta } from "../lib/url";
+
+interface Props {
+  intervalo?: number;
+}
+const { intervalo = 6000 } = Astro.props;
+
+---
+
+<section
+  id="hero"
+  class="relative isolate min-h-[480px] overflow-hidden bg-steel-950 text-white lg:min-h-[620px]"
+  data-intervalo={intervalo}
+  aria-roledescription="carrusel"
+  aria-label="Presentación de Tornomatica"
+>
+  {/* --- Capas de imagen --- */}
+  <div class="absolute inset-0 -z-10">
+    {
+      slides.map((s, i) => (
+        <div
+          class:list={[
+            "hero-bg absolute inset-0 transition-opacity duration-1000 ease-out",
+            i === 0 ? "opacity-100" : "opacity-0",
+          ]}
+          aria-hidden={i !== 0}
+        >
+          <img
+            src={s.src}
+            alt={s.alt}
+            loading={i === 0 ? "eager" : "lazy"}
+            fetchpriority={i === 0 ? "high" : "auto"}
+            decoding="async"
+            class="h-full w-full scale-105 object-cover"
+          />
+        </div>
+      ))
+    }
+    <div class="absolute inset-0 bg-linear-to-r from-steel-950/80 via-steel-950/70 to-steel-950/35"></div>
+    <div class="absolute inset-0 bg-linear-to-t from-steel-950/75 via-transparent to-steel-950/50"></div>
+    <div class="grid-bg absolute inset-0 opacity-40"></div>
+  </div>
+
+  {/* --- Contenido --- */}
+  <div class="mx-auto flex min-h-[480px] max-w-7xl flex-col justify-center px-6 py-16 lg:min-h-[620px]">
+    <div class="grid max-w-2xl">
+      {
+        slides.map((s, i) => (
+          <article
+            class:list={[
+              "hero-txt col-start-1 row-start-1 transition-all duration-700",
+              i === 0 ? "" : "pointer-events-none translate-y-3 opacity-0",
+            ]}
+            role="group"
+            aria-roledescription="diapositiva"
+            aria-label={`${i + 1} de ${slides.length}`}
+          >
+            <p class="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-3.5 py-1.5 text-[11px] font-semibold tracking-widest text-brand-400 uppercase">
+              {s.kicker}
+            </p>
+
+            <h1 class="mt-6 text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+              {s.titulo} <span class="text-brand-500">{s.destacado}</span>
+            </h1>
+
+            <p class="mt-6 max-w-xl text-lg leading-relaxed text-slate-300">{s.bajada}</p>
+
+            <div class="mt-9 flex flex-wrap gap-4">
+              <a
+                href={ruta(s.cta.href)}
+                class="rounded-lg bg-brand-500 px-7 py-3.5 font-semibold text-steel-950 transition hover:bg-brand-400"
+              >
+                {s.cta.label}
+              </a>
+              <a
+                href={ruta("/contacto")}
+                class="rounded-lg border border-white/25 px-7 py-3.5 font-semibold text-white backdrop-blur transition hover:bg-white/10"
+              >
+                Hablar con nosotros
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    {/* --- Barra inferior: controles --- */}
+    <div class="mt-10 flex justify-end">
+      <div class="flex items-center gap-5">
+        <div id="heroDots" class="flex items-center gap-2"></div>
+
+        <div class="flex gap-2">
+          <button
+            data-dir="-1"
+            aria-label="Diapositiva anterior"
+            class="hero-nav flex h-11 w-11 items-center justify-center rounded-full border border-white/25 text-white transition hover:border-brand-500 hover:bg-brand-500 hover:text-steel-950"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"
+              ><path d="M15 6l-6 6 6 6"></path></svg
+            >
+          </button>
+          <button
+            data-dir="1"
+            aria-label="Diapositiva siguiente"
+            class="hero-nav flex h-11 w-11 items-center justify-center rounded-full border border-white/25 text-white transition hover:border-brand-500 hover:bg-brand-500 hover:text-steel-950"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"
+              ><path d="M9 6l6 6-6 6"></path></svg
+            >
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* --- Barra de progreso --- */}
+  <div class="absolute inset-x-0 bottom-0 h-0.5 bg-white/10">
+    <div id="heroProgreso" class="h-full w-0 bg-brand-500"></div>
+  </div>
+</section>
+
+<style>
+  .hero-bg img {
+    animation: kenburns 9s ease-out both;
+  }
+  @keyframes kenburns {
+    from {
+      transform: scale(1.12);
+    }
+    to {
+      transform: scale(1.02);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bg img {
+      animation: none;
+      transform: scale(1.02);
+    }
+  }
+</style>
+
+<script>
+  const root = document.getElementById("hero");
+
+  if (root) {
+    const fondos = [...root.querySelectorAll<HTMLElement>(".hero-bg")];
+    const textos = [...root.querySelectorAll<HTMLElement>(".hero-txt")];
+    const dotsEl = document.getElementById("heroDots")!;
+    const barra = document.getElementById("heroProgreso")!;
+    const intervalo = Number(root.dataset.intervalo ?? 6000);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let i = 0;
+    let timer: ReturnType<typeof setInterval> | undefined;
+    let t0 = 0;
+    let raf = 0;
+
+    fondos.forEach((_, n) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("aria-label", `Ir a la diapositiva ${n + 1}`);
+      b.className = "h-1.5 rounded-full bg-white/30 transition-all duration-300";
+      b.style.width = n === 0 ? "28px" : "8px";
+      b.addEventListener("click", () => {
+        go(n);
+        reset();
+      });
+      dotsEl.appendChild(b);
+    });
+    const dots = [...dotsEl.children] as HTMLElement[];
+
+    function go(n: number) {
+      i = (n + fondos.length) % fondos.length;
+
+      fondos.forEach((f, k) => {
+        f.classList.toggle("opacity-0", k !== i);
+        f.setAttribute("aria-hidden", String(k !== i));
+        if (k === i) {
+          const img = f.querySelector("img");
+          if (img) {
+            img.style.animation = "none";
+            void img.offsetWidth;
+            img.style.animation = "";
+          }
+        }
+      });
+
+      textos.forEach((t, k) => {
+        const oculto = k !== i;
+        t.classList.toggle("opacity-0", oculto);
+        t.classList.toggle("translate-y-3", oculto);
+        t.classList.toggle("pointer-events-none", oculto);
+        t.setAttribute("aria-hidden", String(oculto));
+      });
+
+      dots.forEach((d, k) => {
+        d.style.width = k === i ? "28px" : "8px";
+        d.classList.toggle("bg-brand-500", k === i);
+        d.classList.toggle("bg-white/30", k !== i);
+      });
+    }
+
+    function pintarBarra() {
+      const pct = Math.min(100, ((performance.now() - t0) / intervalo) * 100);
+      barra.style.width = pct + "%";
+      raf = requestAnimationFrame(pintarBarra);
+    }
+
+    function reset() {
+      clearInterval(timer);
+      cancelAnimationFrame(raf);
+      barra.style.width = "0%";
+      if (reduce) return;
+      t0 = performance.now();
+      raf = requestAnimationFrame(pintarBarra);
+      timer = setInterval(() => {
+        go(i + 1);
+        t0 = performance.now();
+      }, intervalo);
+    }
+
+    function pausar() {
+      clearInterval(timer);
+      cancelAnimationFrame(raf);
+    }
+
+    root.querySelectorAll<HTMLButtonElement>(".hero-nav").forEach((b) =>
+      b.addEventListener("click", () => {
+        go(i + Number(b.dataset.dir));
+        reset();
+      })
+    );
+
+    root.addEventListener("mouseenter", pausar);
+    root.addEventListener("mouseleave", reset);
+    root.addEventListener("focusin", pausar);
+    root.addEventListener("focusout", reset);
+
+    document.addEventListener("visibilitychange", () =>
+      document.hidden ? pausar() : reset()
+    );
+
+    root.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        go(i - 1);
+        reset();
+      }
+      if (e.key === "ArrowRight") {
+        go(i + 1);
+        reset();
+      }
+    });
+
+    let x0: number | null = null;
+    root.addEventListener("touchstart", (e) => (x0 = e.touches[0].clientX), { passive: true });
+    root.addEventListener("touchend", (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 45) {
+        go(i + (dx < 0 ? 1 : -1));
+        reset();
+      }
+      x0 = null;
+    });
+
+    go(0);
+    reset();
+  }
+</script>

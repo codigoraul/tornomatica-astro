@@ -1,0 +1,157 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import CtaFinal from "../components/CtaFinal.astro";
+import { galeria } from "../data/site";
+---
+
+<Layout
+  titulo="Galería | Tornomatica"
+  descripcion="Imágenes del taller de Tornomatica en Alto Jahuel: tornos automáticos de levas, torno CNC, piezas mecanizadas y control dimensional."
+>
+  <PageHero
+    kicker="Galería"
+    titulo="Nuestro taller"
+    destacado="por dentro"
+    bajada="Máquinas, procesos y piezas de nuestro taller en Alto Jahuel."
+    imagen={galeria[0].src}
+  />
+
+  <section class="py-24">
+    <div class="mx-auto max-w-7xl px-6">
+      <ul id="grillaGaleria" class="grid grid-cols-2 gap-4 lg:grid-cols-3">
+        {
+          galeria.map((g, i) => (
+            <li>
+              <button
+                type="button"
+                class="foto group block w-full overflow-hidden rounded-xl bg-slate-100"
+                data-index={i}
+                aria-label={`Ampliar: ${g.alt}`}
+              >
+                <img
+                  src={g.src}
+                  alt={g.alt}
+                  loading={i < 3 ? "eager" : "lazy"}
+                  decoding="async"
+                  class="aspect-4/3 w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="mt-10 text-[14px] text-slate-500">
+        Haz clic en cualquier imagen para ampliarla.
+      </p>
+    </div>
+  </section>
+
+  {/* --- Lightbox --- */}
+  <div
+    id="lightbox"
+    class="pointer-events-none fixed inset-0 z-[60] flex items-center justify-center bg-steel-950/95 p-4 opacity-0 backdrop-blur-sm transition-opacity duration-300"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Imagen ampliada"
+  >
+    <button
+      id="lbCerrar"
+      type="button"
+      class="absolute top-5 right-5 flex h-11 w-11 items-center justify-center rounded-full border border-white/25 text-white transition hover:bg-white/10"
+      aria-label="Cerrar"
+    >
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path d="M18 6 6 18M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <button
+      id="lbPrev"
+      type="button"
+      class="absolute left-4 flex h-12 w-12 items-center justify-center rounded-full border border-white/25 text-white transition hover:bg-white/10"
+      aria-label="Anterior"
+    >
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path d="M15 6l-6 6 6 6"></path>
+      </svg>
+    </button>
+
+    <figure class="max-h-[85svh] max-w-5xl">
+      <img id="lbImg" src="" alt="" class="max-h-[78svh] w-auto rounded-lg object-contain" />
+      <figcaption id="lbTexto" class="mt-4 text-center text-sm text-slate-300"></figcaption>
+    </figure>
+
+    <button
+      id="lbNext"
+      type="button"
+      class="absolute right-4 flex h-12 w-12 items-center justify-center rounded-full border border-white/25 text-white transition hover:bg-white/10"
+      aria-label="Siguiente"
+    >
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path d="M9 6l6 6-6 6"></path>
+      </svg>
+    </button>
+  </div>
+
+  <CtaFinal />
+</Layout>
+
+<script>
+  const fotos = [...document.querySelectorAll<HTMLButtonElement>(".foto")];
+  const lb = document.getElementById("lightbox");
+  const img = document.getElementById("lbImg") as HTMLImageElement | null;
+  const texto = document.getElementById("lbTexto");
+
+  if (fotos.length && lb && img && texto) {
+    const datos = fotos.map((f) => {
+      const el = f.querySelector("img")!;
+      return { src: el.src, alt: el.alt };
+    });
+    let i = 0;
+    let previo: HTMLElement | null = null;
+
+    function pintar() {
+      img!.src = datos[i].src;
+      img!.alt = datos[i].alt;
+      texto!.textContent = `${datos[i].alt} — ${i + 1} de ${datos.length}`;
+    }
+
+    function abrir(n: number) {
+      i = n;
+      previo = document.activeElement as HTMLElement;
+      pintar();
+      lb!.classList.remove("opacity-0", "pointer-events-none");
+      document.body.style.overflow = "hidden";
+      document.getElementById("lbCerrar")?.focus();
+    }
+
+    function cerrar() {
+      lb!.classList.add("opacity-0", "pointer-events-none");
+      document.body.style.overflow = "";
+      previo?.focus();
+    }
+
+    function mover(d: number) {
+      i = (i + d + datos.length) % datos.length;
+      pintar();
+    }
+
+    fotos.forEach((f, n) => f.addEventListener("click", () => abrir(n)));
+    document.getElementById("lbCerrar")?.addEventListener("click", cerrar);
+    document.getElementById("lbPrev")?.addEventListener("click", () => mover(-1));
+    document.getElementById("lbNext")?.addEventListener("click", () => mover(1));
+
+    lb.addEventListener("click", (e) => {
+      if (e.target === lb) cerrar();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (lb!.classList.contains("pointer-events-none")) return;
+      if (e.key === "Escape") cerrar();
+      if (e.key === "ArrowLeft") mover(-1);
+      if (e.key === "ArrowRight") mover(1);
+    });
+  }
+</script>

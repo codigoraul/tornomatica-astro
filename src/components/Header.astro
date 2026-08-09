@@ -1,0 +1,256 @@
+---
+import Logo from "./Logo.astro";
+import { site, nav } from "../data/site";
+import { ruta } from "../lib/url";
+
+const menu = [{ label: "Inicio", href: "/" }, ...nav];
+const actual = Astro.url.pathname.replace(/\/$/, "") || "/";
+const activo = (href: string) => {
+  const destino = ruta(href).replace(/\/$/, "") || "/";
+  return destino === "/" ? actual === destino : actual.startsWith(destino);
+};
+---
+
+<header
+  id="siteHeader"
+  class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-md transition-shadow"
+>
+  <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:h-24">
+    <a href={ruta("/")} class="shrink-0" aria-label="Tornomatica — inicio">
+      <Logo clase="h-[58px] sm:h-[64px]" />
+    </a>
+
+    <nav class="hidden items-center gap-7 lg:flex" aria-label="Principal">
+      {
+        menu.map((item) => (
+          <a
+            href={ruta(item.href)}
+            aria-current={activo(item.href) ? "page" : undefined}
+            class:list={[
+              "relative py-2 text-[16px] font-medium transition-colors hover:text-steel-950",
+              "after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-center after:rounded-full after:bg-brand-500 after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100",
+              activo(item.href)
+                ? "text-steel-950 after:scale-x-100"
+                : "text-slate-600 after:scale-x-0",
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-3">
+      <a
+        href={site.telefonoHref}
+        class="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 sm:flex lg:hidden"
+      >
+        <svg class="h-4 w-4 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path
+            d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"
+          ></path>
+        </svg>
+        {site.telefono}
+      </a>
+
+      <a
+        href={ruta("/contacto")}
+        class="hidden rounded-lg bg-steel-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-steel-800 sm:block"
+      >
+        Cotizar
+      </a>
+
+      <button
+        id="menuBtn"
+        type="button"
+        class="-mr-2 flex h-11 w-11 items-center justify-center rounded-lg text-steel-950 transition hover:bg-slate-100 lg:hidden"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+        aria-controls="mobileMenu"
+      >
+        <span class="relative block h-4 w-6" aria-hidden="true">
+          <span
+            class="barra absolute left-0 block h-0.5 w-6 rounded-full bg-current transition-all duration-300"
+            style="top:0"></span>
+          <span
+            class="barra absolute top-1/2 left-0 block h-0.5 w-6 -translate-y-1/2 rounded-full bg-current transition-all duration-300"
+          ></span>
+          <span
+            class="barra absolute left-0 block h-0.5 w-6 rounded-full bg-current transition-all duration-300"
+            style="bottom:0"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+{/* --- Overlay --- */}
+<div
+  id="menuOverlay"
+  class="pointer-events-none fixed inset-0 z-40 bg-steel-950/40 opacity-0 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
+>
+</div>
+
+{/* --- Panel móvil --- */}
+<div
+  id="mobileMenu"
+  class="fixed inset-x-0 top-20 z-40 max-h-[calc(100svh-5rem)] translate-y-[-8px] overflow-y-auto border-b border-slate-200 bg-white opacity-0 transition-all duration-300 lg:hidden"
+  style="visibility:hidden"
+>
+  <nav class="px-4 py-4" aria-label="Menú móvil">
+    <ul class="space-y-1">
+      {
+        menu.map((item) => (
+          <li>
+            <a
+              href={ruta(item.href)}
+              aria-current={activo(item.href) ? "page" : undefined}
+              class:list={[
+                "menu-link group flex items-center justify-between rounded-xl px-4 py-4 text-[17px] font-medium transition hover:bg-slate-50 active:bg-slate-100",
+                activo(item.href)
+                  ? "bg-slate-50 text-brand-600"
+                  : "text-slate-800",
+              ]}
+            >
+              {item.label}
+              <svg
+                class="h-4 w-4 -translate-x-1 text-slate-300 opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M9 6l6 6-6 6" />
+              </svg>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-4 border-t border-slate-200 px-1 pt-5 pb-2">
+      <p class="px-3 text-[11px] font-semibold tracking-[0.18em] text-slate-400 uppercase">
+        Contacto directo
+      </p>
+
+      <div class="mt-3 space-y-1">
+        <a
+          href={site.telefonoHref}
+          class="menu-link flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-slate-50"
+        >
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-steel-950 text-brand-500">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path
+                d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"
+              ></path>
+            </svg>
+          </span>
+          <span>
+            <span class="block text-[15px] font-semibold text-steel-950">{site.telefono}</span>
+            <span class="block text-[13px] text-slate-500">Lunes a viernes</span>
+          </span>
+        </a>
+
+        <a
+          href={`mailto:${site.email}`}
+          class="menu-link flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-slate-50"
+        >
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-steel-950 text-brand-500">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M4 4h16v16H4z"></path><path d="m4 6 8 6 8-6"></path>
+            </svg>
+          </span>
+          <span>
+            <span class="block text-[15px] font-semibold text-steel-950">{site.email}</span>
+            <span class="block text-[13px] text-slate-500">Envíanos tu plano</span>
+          </span>
+        </a>
+      </div>
+
+      <a
+        href={ruta("/contacto")}
+        class="menu-link mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 py-4 text-[16px] font-semibold text-steel-950 transition hover:bg-brand-400"
+      >
+        Solicitar cotización
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M5 12h14M13 6l6 6-6 6"></path>
+        </svg>
+      </a>
+
+      <p class="mt-5 px-3 pb-2 text-[13px] leading-relaxed text-slate-500">{site.direccion}</p>
+    </div>
+  </nav>
+</div>
+
+<script>
+  const btn = document.getElementById("menuBtn");
+  const menu = document.getElementById("mobileMenu");
+  const overlay = document.getElementById("menuOverlay");
+  const header = document.getElementById("siteHeader");
+  const barras = btn?.querySelectorAll<HTMLElement>(".barra");
+
+  let abierto = false;
+
+  function abrir() {
+    if (!menu || !overlay || !btn) return;
+    abierto = true;
+    menu.style.visibility = "visible";
+    requestAnimationFrame(() => {
+      menu.classList.remove("opacity-0");
+      menu.style.transform = "translateY(0)";
+      overlay.classList.remove("opacity-0");
+      overlay.classList.add("pointer-events-auto");
+    });
+    btn.setAttribute("aria-expanded", "true");
+    btn.setAttribute("aria-label", "Cerrar menú");
+    document.body.style.overflow = "hidden";
+
+    if (barras) {
+      barras[0].style.transform = "translateY(7px) rotate(45deg)";
+      barras[1].style.opacity = "0";
+      barras[2].style.transform = "translateY(-7px) rotate(-45deg)";
+    }
+  }
+
+  function cerrar() {
+    if (!menu || !overlay || !btn) return;
+    abierto = false;
+    menu.classList.add("opacity-0");
+    menu.style.transform = "translateY(-8px)";
+    overlay.classList.add("opacity-0");
+    overlay.classList.remove("pointer-events-auto");
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-label", "Abrir menú");
+    document.body.style.overflow = "";
+
+    if (barras) {
+      barras[0].style.transform = "";
+      barras[1].style.opacity = "";
+      barras[2].style.transform = "";
+    }
+    setTimeout(() => {
+      if (!abierto) menu.style.visibility = "hidden";
+    }, 300);
+  }
+
+  btn?.addEventListener("click", () => (abierto ? cerrar() : abrir()));
+  overlay?.addEventListener("click", cerrar);
+  menu?.querySelectorAll(".menu-link").forEach((a) => a.addEventListener("click", cerrar));
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && abierto) cerrar();
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth >= 1024 && abierto) cerrar();
+  });
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      header?.classList.toggle("shadow-sm", window.scrollY > 8);
+    },
+    { passive: true }
+  );
+</script>

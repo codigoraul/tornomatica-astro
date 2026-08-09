@@ -1,0 +1,42 @@
+---
+import "../styles/global.css";
+import Topbar from "../components/Topbar.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { ruta } from "../lib/url";
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+}
+const { titulo, descripcion } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href={ruta("/favicon.svg")} />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={Astro.url.href} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-white font-sans text-steel-950 antialiased">
+    <Topbar />
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

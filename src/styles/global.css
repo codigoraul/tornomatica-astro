@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  /* Barlow: grotesca de raíz industrial, inspirada en señalética vial.
+     Menos genérica que Inter y afín al logotipo. */
+  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", ui-sans-serif, system-ui, sans-serif;
+
+  /* Azul profundo — fondos oscuros */
+  --color-steel-950: #041a2e;
+  --color-steel-900: #0a2440;
+  --color-steel-800: #1e3147;
+  --color-steel-700: #2b4460;
+  --color-steel-600: #3d5a7a;
+
+  /* Dorados del logotipo */
+  --color-brand-400: #dfaf3e; /* claro  — sobre fondo oscuro */
+  --color-brand-500: #dea01e; /* medio  — acento principal */
+  --color-brand-600: #ca8b05; /* oscuro — títulos grandes sobre blanco */
+  --color-brand-700: #8a5f03; /* extra oscuro — textos chicos, contraste AA */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
+}

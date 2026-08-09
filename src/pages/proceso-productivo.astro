@@ -1,0 +1,107 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import CtaFinal from "../components/CtaFinal.astro";
+import { procesoDetalle, ventajas, galeria } from "../data/site";
+---
+
+<Layout
+  titulo="Proceso productivo | Tornomatica"
+  descripcion="Cómo fabricamos: definición del torneado, programación del torno, fabricación en serie en tornos automáticos de levas, procesos complementarios y control dimensional."
+>
+  <PageHero
+    kicker="Proceso productivo"
+    titulo="De tu plano a la pieza"
+    destacado="terminada"
+    bajada="Seis etapas, con validación tuya en cada punto crítico."
+    imagen={galeria[2].src}
+  />
+
+  <section class="py-24">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid gap-16 lg:grid-cols-12">
+        <div class="lg:col-span-5">
+          <div class="lg:sticky lg:top-28">
+            <p class="text-xs font-bold tracking-[0.2em] text-brand-700 uppercase">Qué hacemos</p>
+            <h2 class="mt-3 text-3xl font-semibold tracking-tight">
+              Fabricación en serie en tornos automáticos de levas
+            </h2>
+            <p class="mt-5 leading-relaxed text-slate-700">
+              Estamos preparados para fabricar partes y piezas en serie en diversos materiales,
+              tales como aceros y latón mecanizables, de acuerdo con los requerimientos de nuestros
+              clientes.
+            </p>
+
+            <div class="mt-8 overflow-hidden rounded-2xl border border-slate-200">
+              <img
+                src={galeria[4].src}
+                alt="Tornos automáticos de levas"
+                loading="lazy"
+                class="aspect-4/3 w-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7">
+          <ol class="space-y-10 border-l-2 border-slate-200 pl-8">
+            {
+              procesoDetalle.map((p, i) => (
+                <li class="relative">
+                  <span
+                    class:list={[
+                      "absolute -left-[41px] top-1 flex h-5 w-5 items-center justify-center rounded-full ring-4 ring-white",
+                      i === 0 ? "bg-brand-500" : "bg-slate-300",
+                    ]}
+                  />
+                  <p class="font-display text-sm font-bold tracking-widest text-brand-600">{p.n}</p>
+                  <h3 class="mt-1 text-xl font-bold">{p.titulo}</h3>
+                  <p class="mt-2 leading-relaxed text-slate-700">{p.texto}</p>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-steel-950 py-24 text-white">
+    <div class="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-2">
+      <div>
+        <p class="text-xs font-bold tracking-[0.2em] text-brand-500 uppercase">Ventajas</p>
+        <h2 class="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+          Por qué el torno automático de levas
+        </h2>
+        <p class="mt-5 leading-relaxed text-slate-400">
+          Para volúmenes altos de una misma pieza, es la tecnología con mejor relación costo-precisión.
+        </p>
+      </div>
+
+      <ul class="space-y-4">
+        {
+          ventajas.map((v) => (
+            <li class="flex gap-4 rounded-xl border border-steel-700 bg-steel-900 p-5">
+              <svg
+                class="mt-0.5 h-5 w-5 shrink-0 text-brand-500"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="m5 13 4 4L19 7" />
+              </svg>
+              <span class="text-[15px] leading-relaxed text-slate-300">{v}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaFinal
+    titulo="Envíanos tu plano"
+    bajada="Con el plano, el material y la cantidad podemos definir el proceso de torneado y cotizarte."
+  />
+</Layout>
