@@ -6,29 +6,29 @@ import { ruta } from "../lib/url";
 const anio = new Date().getFullYear();
 ---
 
-<footer class="bg-steel-950 text-slate-400">
+<footer class="bg-steel-950 text-slate-300">
   <div class="mx-auto max-w-7xl px-6 py-16">
     <div class="grid gap-12 md:grid-cols-12">
       <div class="md:col-span-5">
         <Logo variante="blanco" clase="h-12" />
-        <p class="mt-4 max-w-md text-sm leading-relaxed">
+        <p class="mt-4 max-w-md text-[15px] leading-relaxed">
           Fabricación de partes y piezas en serie en tornos automáticos de levas y torno CNC,
           en aceros, latón, aluminio y plásticos mecanizables.
         </p>
-        <p class="mt-3 max-w-md text-sm leading-relaxed">
+        <p class="mt-3 max-w-md text-[15px] leading-relaxed">
           Operamos desde {FUNDACION} en un galpón de {site.superficie} en Alto Jahuel, con
           instrumental metrológico que asegura la precisión dimensional de cada lote y personal
           técnico calificado.
         </p>
-        <p class="mt-3 max-w-md text-sm leading-relaxed">
+        <p class="mt-3 max-w-md text-[15px] leading-relaxed">
           Atendemos minería, agricultura, automotriz, línea blanca, agroindustria y manufactura
           en general.
         </p>
       </div>
 
       <nav class="md:col-span-3" aria-label="Pie de página">
-        <h2 class="text-[11px] font-semibold tracking-[0.18em] text-slate-500 uppercase">Navegación</h2>
-        <ul class="mt-4 space-y-2.5 text-sm">
+        <h2 class="text-[13px] font-semibold tracking-[0.18em] text-slate-100 uppercase">Navegación</h2>
+        <ul class="mt-7 space-y-2.5 text-[15px]">
           <li><a href={ruta("/")} class="transition hover:text-white">Inicio</a></li>
           {nav.map((item) => (
             <li><a href={ruta(item.href)} class="transition hover:text-white">{item.label}</a></li>
@@ -37,8 +37,8 @@ const anio = new Date().getFullYear();
       </nav>
 
       <div class="md:col-span-4">
-        <h2 class="text-[11px] font-semibold tracking-[0.18em] text-slate-500 uppercase">Contacto</h2>
-        <ul class="mt-4 space-y-2.5 text-sm">
+        <h2 class="text-[13px] font-semibold tracking-[0.18em] text-slate-100 uppercase">Contacto</h2>
+        <ul class="mt-7 space-y-2.5 text-[15px]">
           <li>
             <a href={site.telefonoHref} class="font-semibold text-white transition hover:text-brand-500">
               {site.telefono}
@@ -65,8 +65,16 @@ const anio = new Date().getFullYear();
       </div>
     </div>
 
-    <div class="mt-14 border-t border-white/10 pt-6 text-xs text-slate-500">
-      © {anio} {site.nombre}. Todos los derechos reservados.
+    <div class="mt-14 border-t border-white/10 pt-6 text-[13px] text-slate-500">
+      © {anio} {site.nombre}. Todos los derechos reservados. — Sitio por{" "}
+      <a
+        href="https://xn--diseopaginas-dhb.cl"
+        target="_blank"
+        rel="noopener"
+        class="text-slate-400 transition hover:text-brand-400"
+      >
+        diseñopaginas.cl
+      </a>
     </div>
   </div>
 </footer>
