@@ -15,8 +15,8 @@ const { kicker, titulo, destacado, bajada, imagen } = Astro.props;
   {
     imagen && (
       <div class="absolute inset-0 -z-10">
-        <img src={ruta(imagen)} alt="" aria-hidden="true" class="h-full w-full object-cover opacity-20" />
-        <div class="absolute inset-0 bg-linear-to-r from-steel-950 via-steel-950/90 to-steel-950/60" />
+        <img src={ruta(imagen)} alt="" aria-hidden="true" class="h-full w-full object-cover opacity-60" />
+        <div class="absolute inset-0 bg-linear-to-r from-steel-950/95 via-steel-950/70 to-steel-950/25" />
       </div>
     )
   }
