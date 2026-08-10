@@ -64,9 +64,15 @@ const { intervalo = 6000 } = Astro.props;
               {s.kicker}
             </p>
 
-            <h1 class="mt-6 text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-              {s.titulo} <span class="text-brand-500">{s.destacado}</span>
-            </h1>
+            {i === 0 ? (
+              <h1 class="mt-6 text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+                {s.titulo} <span class="text-brand-500">{s.destacado}</span>
+              </h1>
+            ) : (
+              <p class="mt-6 text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+                {s.titulo} <span class="text-brand-500">{s.destacado}</span>
+              </p>
+            )}
 
             <p class="mt-6 max-w-xl text-lg leading-relaxed text-slate-300">{s.bajada}</p>
 

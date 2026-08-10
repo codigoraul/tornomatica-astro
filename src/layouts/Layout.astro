@@ -4,12 +4,29 @@ import Topbar from "../components/Topbar.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { ruta } from "../lib/url";
+import { site } from "../data/site";
 
 interface Props {
   titulo: string;
   descripcion: string;
 }
 const { titulo, descripcion } = Astro.props;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: site.nombre,
+  description: descripcion,
+  url: Astro.site?.href,
+  telephone: site.telefonoHref.replace("tel:", ""),
+  email: site.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.direccion,
+    addressCountry: "CL",
+  },
+  foundingDate: String(site.fundacion),
+};
 ---
 
 <!doctype html>
@@ -17,13 +34,18 @@ const { titulo, descripcion } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href={ruta("/favicon.svg")} />
+    <link rel="icon" type="image/png" href={ruta("/favicon.png")} />
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={Astro.url.href} />
     <meta property="og:title" content={titulo} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:image" content={new URL(ruta("/fondos/fondo-3.jpg"), Astro.site)} />
+    <meta property="og:locale" content="es_CL" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

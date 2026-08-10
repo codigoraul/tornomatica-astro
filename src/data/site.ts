@@ -145,14 +145,14 @@ export const galeria = [
   { src: "/galeria/337-1402279103.jpg", alt: "Pernos y niples mecanizados en serie" },
   { src: "/galeria/333-1402279480-thumb.jpg", alt: "Torno CNC" },
   { src: "/galeria/240-1305041936-thumb.jpg", alt: "Buje bisagra" },
-  { src: "/galeria/taller-1.jpg", alt: "Taller de Tornomatica" },
-  { src: "/galeria/taller-2.jpg", alt: "Taller de Tornomatica" },
-  { src: "/galeria/taller-3.jpg", alt: "Taller de Tornomatica" },
-  { src: "/galeria/taller-4.jpg", alt: "Taller de Tornomatica" },
-  { src: "/galeria/taller-5.jpg", alt: "Taller de Tornomatica" },
-  { src: "/galeria/taller-6.jpg", alt: "Taller de Tornomatica" },
-  { src: "/galeria/taller-7.jpg", alt: "Taller de Tornomatica" },
-  { src: "/galeria/taller-8.jpg", alt: "Taller de Tornomatica" },
+  { src: "/galeria/taller-1.jpg", alt: "Interior del taller de Tornomatica en Alto Jahuel" },
+  { src: "/galeria/taller-2.jpg", alt: "Tornos automáticos en línea de producción" },
+  { src: "/galeria/taller-3.jpg", alt: "Torno automático Unamuno en operación" },
+  { src: "/galeria/taller-4.jpg", alt: "Fila de tornos automáticos de levas" },
+  { src: "/galeria/taller-5.jpg", alt: "Vista general del galpón de producción" },
+  { src: "/galeria/taller-6.jpg", alt: "Tornos automáticos vistos desde el fondo del taller" },
+  { src: "/galeria/taller-7.jpg", alt: "Zona de esmerilado y ajuste de piezas" },
+  { src: "/galeria/taller-8.jpg", alt: "Torno alimentado con barra de acero" },
 ];
 
 /* ---------- Quiénes somos ---------- */

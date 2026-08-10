@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import PageHero from "../components/PageHero.astro";
 import CtaFinal from "../components/CtaFinal.astro";
 import { site, sectores, fortalezas, galeria, FUNDACION } from "../data/site";
+import { ruta } from "../lib/url";
 
 const anios = new Date().getFullYear() - FUNDACION;
 
@@ -54,7 +55,7 @@ const iconos: Record<string, string> = {
 
       <aside class="lg:col-span-5">
         <div class="overflow-hidden rounded-2xl border border-slate-200">
-          <img src={galeria[1].src} alt="Taller Tornomatica en Alto Jahuel" loading="lazy" class="aspect-4/3 w-full object-cover" />
+          <img src={ruta(galeria[1].src)} alt="Taller Tornomatica en Alto Jahuel" loading="lazy" class="aspect-4/3 w-full object-cover" />
         </div>
 
         <dl class="mt-6 grid grid-cols-3 gap-4">

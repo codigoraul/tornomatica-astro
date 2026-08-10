@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import PageHero from "../components/PageHero.astro";
 import CtaFinal from "../components/CtaFinal.astro";
 import { procesoDetalle, ventajas, galeria } from "../data/site";
+import { ruta } from "../lib/url";
 ---
 
 <Layout
@@ -34,7 +35,7 @@ import { procesoDetalle, ventajas, galeria } from "../data/site";
 
             <div class="mt-8 overflow-hidden rounded-2xl border border-slate-200">
               <img
-                src={galeria[4].src}
+                src={ruta(galeria[4].src)}
                 alt="Tornos automáticos de levas"
                 loading="lazy"
                 class="aspect-4/3 w-full object-cover"
