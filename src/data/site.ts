@@ -55,7 +55,7 @@ export const slides: Slide[] = [
     cta: { label: "Solicitar cotización", href: "/contacto" },
   },
   {
-    src: `${WP}/_slide_big_image/237-1305040114.jpg`,
+    src: "/hero/hero-2.jpg",
     alt: "Proceso de torneado",
     kicker: "Proceso productivo",
     titulo: "De tu plano a la pieza",
@@ -65,7 +65,7 @@ export const slides: Slide[] = [
     cta: { label: "Conocer el proceso", href: "/proceso-productivo" },
   },
   {
-    src: `${WP}/_slide_big_image/238-1295963548.jpg`,
+    src: "/hero/hero-3.jpg",
     alt: "Control dimensional de piezas",
     kicker: "Control de calidad",
     titulo: "Verificación dimensional",
@@ -123,14 +123,14 @@ export const proceso = [
 export const equipos = [
   {
     titulo: "Torno CNC",
-    img: `${WP}/_portfolio_image/333-1402279480-thumb.jpg`,
+    img: "/equipos/torno-cnc.jpg",
     texto:
       "Gran precisión (centésimas de milímetro). Procesa aceros, latones, aluminio y plástico hasta Ø300 mm y 350 mm de largo.",
     tags: ["Ø300 mm", "Largo 350 mm", "±0,01 mm"],
   },
   {
     titulo: "Tornos automáticos de levas",
-    img: `${WP}/_slide_big_image/236-1305040211.jpg`,
+    img: "/galeria/236-1305040211.jpg",
     texto:
       "Producción en serie de alto volumen: una vez ajustadas las levas, el torneado es prácticamente automático y repetible pieza a pieza.",
     tags: ["Producción en serie", "Alto volumen", "Acero / latón"],
@@ -145,6 +145,14 @@ export const galeria = [
   { src: "/galeria/337-1402279103.jpg", alt: "Pernos y niples mecanizados en serie" },
   { src: "/galeria/333-1402279480-thumb.jpg", alt: "Torno CNC" },
   { src: "/galeria/240-1305041936-thumb.jpg", alt: "Buje bisagra" },
+  { src: "/galeria/taller-1.jpg", alt: "Taller de Tornomatica" },
+  { src: "/galeria/taller-2.jpg", alt: "Taller de Tornomatica" },
+  { src: "/galeria/taller-3.jpg", alt: "Taller de Tornomatica" },
+  { src: "/galeria/taller-4.jpg", alt: "Taller de Tornomatica" },
+  { src: "/galeria/taller-5.jpg", alt: "Taller de Tornomatica" },
+  { src: "/galeria/taller-6.jpg", alt: "Taller de Tornomatica" },
+  { src: "/galeria/taller-7.jpg", alt: "Taller de Tornomatica" },
+  { src: "/galeria/taller-8.jpg", alt: "Taller de Tornomatica" },
 ];
 
 /* ---------- Quiénes somos ---------- */
