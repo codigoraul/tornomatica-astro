@@ -3,9 +3,11 @@ export const FUNDACION = 1997;
 export const site = {
   nombre: "Tornomatica",
   tagline: "Partes y piezas de precisión",
-  telefono: "(+56 2) 413 3817",
-  telefonoHref: "tel:+56224133817",
-  whatsapp: "https://wa.me/56224133817",
+  telefono: "+56 9 9325 3868",
+  telefonoHref: "tel:+56993253868",
+  telefono2: "+56 9 9163 0500",
+  telefono2Href: "tel:+56991630500",
+  whatsapp: "https://wa.me/56993253868",
   email: "info@tornomatica.cl",
   direccion: "San Luis #410, Alto Jahuel, Buin — Santiago, Chile",
   mapa:
