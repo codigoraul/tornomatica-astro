@@ -4,23 +4,38 @@ import PageHero from "../components/PageHero.astro";
 import CtaFinal from "../components/CtaFinal.astro";
 import { galeria } from "../data/site";
 import { ruta } from "../lib/url";
+
+const videos = [
+  {
+    src: "/videos/tornos-traub-td-26-1.mp4",
+    poster: "/videos/poster-tornos-1.jpg",
+    titulo: "Torno automático de levas · Traub TD 26",
+  },
+  {
+    src: "/videos/tornos-traub-td-26-2.mp4",
+    poster: "/videos/poster-tornos-2.jpg",
+    titulo: "Torno automático de levas · Traub TD 26",
+  },
+];
 ---
 
 <Layout
-  titulo="Galería | Tornomatica"
-  descripcion="Imágenes del taller de Tornomatica en Alto Jahuel: tornos automáticos de levas, torno CNC, piezas mecanizadas y control dimensional."
+  titulo="Galería de fotos y videos | Tornomatica"
+  descripcion="Fotos y videos del taller de Tornomatica en Alto Jahuel: tornos automáticos de levas, torno CNC, piezas mecanizadas y control dimensional."
 >
   <PageHero
     kicker="Galería"
     titulo="Nuestro taller"
-    destacado="por dentro"
+    destacado="en fotos y videos"
     bajada="Máquinas, procesos y piezas de nuestro taller en Alto Jahuel."
     imagen="/fondos/fondo-1.jpg"
   />
 
   <section class="py-24">
     <div class="mx-auto max-w-7xl px-6">
-      <ul id="grillaGaleria" class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <h2 class="text-2xl font-semibold tracking-tight text-steel-950">Fotos</h2>
+
+      <ul id="grillaGaleria" class="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {
           galeria.map((g, i) => (
             <li>
@@ -43,9 +58,29 @@ import { ruta } from "../lib/url";
         }
       </ul>
 
-      <p class="mt-10 text-[14px] text-slate-500">
-        Haz clic en cualquier imagen para ampliarla.
-      </p>
+      <p class="mt-6 text-[14px] text-slate-500">Haz clic en cualquier imagen para ampliarla.</p>
+
+      <h2 class="mt-20 text-2xl font-semibold tracking-tight text-steel-950">Videos</h2>
+
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        {
+          videos.map((v) => (
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <video
+                src={ruta(v.src)}
+                poster={ruta(v.poster)}
+                controls
+                playsinline
+                preload="none"
+                class="js-video aspect-video w-full bg-black"
+              >
+                Tu navegador no soporta la reproducción de video.
+              </video>
+              <p class="p-5 text-sm font-semibold text-steel-900">{v.titulo}</p>
+            </div>
+          ))
+        }
+      </div>
     </div>
   </section>
 
@@ -155,4 +190,13 @@ import { ruta } from "../lib/url";
       if (e.key === "ArrowRight") mover(1);
     });
   }
+
+  const videos = [...document.querySelectorAll<HTMLVideoElement>(".js-video")];
+  videos.forEach((v) => {
+    v.addEventListener("play", () => {
+      videos.forEach((otro) => {
+        if (otro !== v) otro.pause();
+      });
+    });
+  });
 </script>
