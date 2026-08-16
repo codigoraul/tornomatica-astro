@@ -1,0 +1,62 @@
+---
+import { ruta } from "../lib/url";
+
+const videos = [
+  {
+    src: "/videos/tornos-traub-td-26-1.mp4",
+    poster: "/videos/poster-tornos-1.jpg",
+    titulo: "Torno automático de levas · Traub TD 26",
+  },
+  {
+    src: "/videos/tornos-traub-td-26-2.mp4",
+    poster: "/videos/poster-tornos-2.jpg",
+    titulo: "Torno automático de levas · Traub TD 26",
+  },
+];
+---
+
+<section id="video-proceso" class="bg-slate-100 py-24">
+  <div class="mx-auto max-w-7xl px-6">
+    <div>
+      <p class="text-xs font-bold tracking-[0.2em] text-brand-700 uppercase">En terreno</p>
+      <h2 class="mt-3 text-3xl font-semibold tracking-tight text-steel-950 sm:text-4xl">
+        El mecanizado, en video
+      </h2>
+    </div>
+
+    <div class="mt-6 grid gap-6 leading-relaxed text-slate-700 lg:grid-cols-2 lg:gap-16">
+      <p>
+        Fabricación completa de un niple/boquilla roscado en torno automático de levas, a
+        partir de una barra hexagonal de latón, hasta convertirse en una pieza terminada lista
+        para usar. Primero se cilindra el exterior y se forma el chaflán; luego se taladra y
+        rosca la primera sección con refrigerante continuo.
+      </p>
+      <p>
+        Después se tornean los diámetros escalonados manteniendo la sección hexagonal para
+        llave, se rosca la segunda sección y se tronza la pieza: una conexión macho-macho en
+        latón/bronce, con tuerca hexagonal central y orificio calibrado tipo inyector, usada en
+        sistemas de gas, combustible o líneas hidráulicas/neumáticas.
+      </p>
+    </div>
+
+    <div class="mt-14 grid gap-6 md:grid-cols-2">
+      {
+        videos.map((v) => (
+          <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <video
+              src={ruta(v.src)}
+              poster={ruta(v.poster)}
+              controls
+              playsinline
+              preload="none"
+              class="aspect-video w-full bg-black"
+            >
+              Tu navegador no soporta la reproducción de video.
+            </video>
+            <p class="p-5 text-sm font-semibold text-steel-900">{v.titulo}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
