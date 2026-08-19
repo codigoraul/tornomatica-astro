@@ -3,9 +3,18 @@
 declare(strict_types=1);
 
 return [
-  'BASE_PATH' => '',
-  'SITE_URL' => 'https://tornomatica.cl',
-  'TO_EMAIL' => 'bego.gredilla@tornomatica.cl, jgredilla@tornomatica.cl',
+  // Subcarpeta donde vive el sitio. Vacío si está en la raíz, '/prueba' en el entorno de pruebas.
+  'BASE_PATH' => '/prueba',
+  'SITE_URL' => 'https://www.tornomatica.cl',
+
+  // Destinatario fijo que siempre recibe copia. Vacío mientras se hacen pruebas.
+  // Al pasar a producción: 'info@tornomatica.cl'
+  'TO_EMAILS_BASE' => '',
+
+  // Destinatarios del formulario.
+  // Producción: 'bego.gredilla@tornomatica.cl, jgredilla@tornomatica.cl'
+  'TO_EMAIL' => 'codigoraul@gmail.com',
+
   'FROM_EMAIL' => 'info@tornomatica.cl',
   'FROM_NAME' => 'Tornomatica',
   'BCC_EMAILS' => '',
