@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import PageHero from "../components/PageHero.astro";
 import CtaFinal from "../components/CtaFinal.astro";
-import { galeria } from "../data/site";
+import { galeria, categoriasGaleria } from "../data/site";
 import { ruta } from "../lib/url";
 
 const videos = [
@@ -33,12 +33,29 @@ const videos = [
 
   <section class="py-24">
     <div class="mx-auto max-w-7xl px-6">
-      <h2 class="text-2xl font-semibold tracking-tight text-steel-950">Fotos</h2>
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <h2 class="text-2xl font-semibold tracking-tight text-steel-950">Fotos</h2>
+
+        <div id="filtrosGaleria" class="flex flex-wrap gap-2" role="group" aria-label="Filtrar galería por categoría">
+          {
+            categoriasGaleria.map((c) => (
+              <button
+                type="button"
+                class="filtro rounded-full border border-slate-300 px-4 py-1.5 text-sm font-semibold text-slate-600 transition hover:border-brand-500 hover:text-brand-600 aria-pressed:border-brand-600 aria-pressed:bg-brand-600 aria-pressed:text-white"
+                data-filtro={c.valor}
+                aria-pressed={c.valor === "todas" ? "true" : "false"}
+              >
+                {c.label}
+              </button>
+            ))
+          }
+        </div>
+      </div>
 
       <ul id="grillaGaleria" class="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {
           galeria.map((g, i) => (
-            <li>
+            <li class="foto-item" data-categoria={g.categoria}>
               <button
                 type="button"
                 class="foto group block w-full overflow-hidden rounded-xl bg-slate-100"
@@ -141,12 +158,13 @@ const videos = [
   const texto = document.getElementById("lbTexto");
 
   if (fotos.length && lb && img && texto) {
-    const datos = fotos.map((f) => {
-      const el = f.querySelector("img")!;
-      return { src: el.src, alt: el.alt };
-    });
+    let datos: { src: string; alt: string }[] = [];
     let i = 0;
     let previo: HTMLElement | null = null;
+
+    function fotosVisibles() {
+      return fotos.filter((f) => (f.closest(".foto-item") as HTMLElement | null)?.style.display !== "none");
+    }
 
     function pintar() {
       img!.src = datos[i].src;
@@ -154,8 +172,13 @@ const videos = [
       texto!.textContent = `${datos[i].alt} — ${i + 1} de ${datos.length}`;
     }
 
-    function abrir(n: number) {
-      i = n;
+    function abrir(f: HTMLButtonElement) {
+      const visibles = fotosVisibles();
+      datos = visibles.map((el) => {
+        const im = el.querySelector("img")!;
+        return { src: im.src, alt: im.alt };
+      });
+      i = Math.max(0, visibles.indexOf(f));
       previo = document.activeElement as HTMLElement;
       pintar();
       lb!.classList.remove("opacity-0", "pointer-events-none");
@@ -174,7 +197,7 @@ const videos = [
       pintar();
     }
 
-    fotos.forEach((f, n) => f.addEventListener("click", () => abrir(n)));
+    fotos.forEach((f) => f.addEventListener("click", () => abrir(f)));
     document.getElementById("lbCerrar")?.addEventListener("click", cerrar);
     document.getElementById("lbPrev")?.addEventListener("click", () => mover(-1));
     document.getElementById("lbNext")?.addEventListener("click", () => mover(1));
@@ -190,6 +213,22 @@ const videos = [
       if (e.key === "ArrowRight") mover(1);
     });
   }
+
+  const botonesFiltro = [...document.querySelectorAll<HTMLButtonElement>(".filtro")];
+  const itemsGaleria = [...document.querySelectorAll<HTMLLIElement>(".foto-item")];
+
+  botonesFiltro.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const filtro = btn.dataset.filtro;
+
+      botonesFiltro.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+
+      itemsGaleria.forEach((li) => {
+        const mostrar = filtro === "todas" || li.dataset.categoria === filtro;
+        li.style.display = mostrar ? "" : "none";
+      });
+    });
+  });
 
   const videos = [...document.querySelectorAll<HTMLVideoElement>(".js-video")];
   videos.forEach((v) => {
