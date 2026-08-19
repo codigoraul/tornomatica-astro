@@ -1,0 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+  'BASE_PATH' => '',
+  'SITE_URL' => 'https://tornomatica.cl',
+  'TO_EMAIL' => 'bego.gredilla@tornomatica.cl, jgredilla@tornomatica.cl',
+  'FROM_EMAIL' => 'info@tornomatica.cl',
+  'FROM_NAME' => 'Tornomatica',
+  'BCC_EMAILS' => '',
+];

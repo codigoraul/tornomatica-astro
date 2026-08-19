@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# contacto.php config con credenciales reales (usar contacto-config.php.example)
+public/contacto-config.php
+
 # macOS-specific files
 .DS_Store
 

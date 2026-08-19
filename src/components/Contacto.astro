@@ -1,5 +1,9 @@
 ---
 import { site } from "../data/site";
+
+const rawBase = import.meta.env.BASE_URL ?? "/";
+const basePath = rawBase === "/" ? "" : rawBase.replace(/\/$/, "");
+const actionUrl = `${basePath}/contacto.php`;
 ---
 
 <section id="contacto" class="border-t border-slate-200 bg-slate-50 py-24">
@@ -32,7 +36,9 @@ import { site } from "../data/site";
       </div>
     </div>
 
-    <form id="formCotizacion" class="space-y-5 rounded-2xl border border-slate-200 bg-white p-8" novalidate>
+    <form id="formCotizacion" class="space-y-5 rounded-2xl border border-slate-200 bg-white p-8" action={actionUrl} method="POST" novalidate>
+      <input type="text" name="_gotcha" class="honeypot" tabindex="-1" autocomplete="off" />
+
       <div class="grid gap-5 sm:grid-cols-2">
         <div>
           <label for="nombre" class="mb-1.5 block text-sm font-medium">Nombre</label>
@@ -87,12 +93,13 @@ import { site } from "../data/site";
 
       <button
         type="submit"
+        id="submitBtn"
         class="w-full rounded-lg bg-steel-950 px-6 py-3.5 font-semibold text-white transition hover:bg-steel-800"
       >
-        Enviar solicitud
+        <span>Enviar solicitud</span>
       </button>
 
-      <p id="formEstado" class="hidden text-sm text-slate-700"></p>
+      <p id="formEstado" class="hidden rounded-lg p-4 text-sm"></p>
     </form>
   </div>
 </section>
@@ -100,17 +107,66 @@ import { site } from "../data/site";
 <script>
   const form = document.getElementById("formCotizacion") as HTMLFormElement | null;
   const estado = document.getElementById("formEstado");
+  const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement | null;
 
-  form?.addEventListener("submit", (e) => {
+  form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
     }
-    if (estado) {
-      estado.classList.remove("hidden");
-      estado.textContent =
-        "Pendiente: conectar a un endpoint (Astro Actions, Formspree o el CF7 de WordPress).";
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Enviando…";
+    }
+
+    try {
+      const formData = new FormData(form);
+      const response = await fetch(form.action, { method: "POST", body: formData });
+      const result = await response.json();
+
+      if (estado) {
+        estado.classList.remove("hidden", "bg-red-50", "text-red-700", "bg-green-50", "text-green-700");
+        estado.textContent = result.message;
+
+        if (result.success) {
+          estado.classList.add("bg-green-50", "text-green-700");
+          form.reset();
+        } else {
+          estado.classList.add("bg-red-50", "text-red-700");
+        }
+
+        estado.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    } catch (err) {
+      if (estado) {
+        estado.classList.remove("hidden", "bg-green-50", "text-green-700");
+        estado.classList.add("bg-red-50", "text-red-700");
+        estado.textContent = "Error de conexión. Por favor intenta nuevamente.";
+        estado.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Enviar solicitud";
     }
   });
 </script>
+
+<style>
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #submitBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+</style>
