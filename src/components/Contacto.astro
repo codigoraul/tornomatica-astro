@@ -36,70 +36,75 @@ const actionUrl = `${basePath}/contacto.php`;
       </div>
     </div>
 
-    <form id="formCotizacion" class="space-y-5 rounded-2xl border border-slate-200 bg-white p-8" action={actionUrl} method="POST" novalidate>
+    <form id="formCotizacion" class="form-light space-y-5 rounded-2xl border border-zinc-300 bg-[#EAEAEA] p-8 shadow-2xl shadow-zinc-400/30" action={actionUrl} method="POST" novalidate>
+      <div class="flex items-center gap-3">
+        <span class="h-px w-8 bg-brand-500"></span>
+        <p class="text-xs font-bold tracking-[0.2em] uppercase" style="color: var(--color-brand-600)">Cotización rápida</p>
+      </div>
+
       <input type="text" name="_gotcha" class="honeypot" tabindex="-1" autocomplete="off" />
 
       <div class="grid gap-5 sm:grid-cols-2">
         <div>
-          <label for="nombre" class="mb-1.5 block text-sm font-medium">Nombre</label>
+          <label for="nombre" class="mb-1.5 block text-sm font-semibold text-zinc-900">Nombre</label>
           <input
             id="nombre"
             name="nombre"
             required
-            class="w-full rounded-lg border border-slate-300 px-4 py-2.5 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 focus:outline-none"
+            class="w-full rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2.5 text-white placeholder-zinc-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 focus:outline-none"
           />
         </div>
         <div>
-          <label for="empresa" class="mb-1.5 block text-sm font-medium">Empresa</label>
+          <label for="empresa" class="mb-1.5 block text-sm font-semibold text-zinc-900">Empresa</label>
           <input
             id="empresa"
             name="empresa"
-            class="w-full rounded-lg border border-slate-300 px-4 py-2.5 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 focus:outline-none"
+            class="w-full rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2.5 text-white placeholder-zinc-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 focus:outline-none"
           />
         </div>
       </div>
 
       <div class="grid gap-5 sm:grid-cols-2">
         <div>
-          <label for="email" class="mb-1.5 block text-sm font-medium">Email</label>
+          <label for="email" class="mb-1.5 block text-sm font-semibold text-zinc-900">Email</label>
           <input
             id="email"
             name="email"
             type="email"
             required
-            class="w-full rounded-lg border border-slate-300 px-4 py-2.5 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 focus:outline-none"
+            class="w-full rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2.5 text-white placeholder-zinc-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 focus:outline-none"
           />
         </div>
         <div>
-          <label for="telefono" class="mb-1.5 block text-sm font-medium">Teléfono</label>
+          <label for="telefono" class="mb-1.5 block text-sm font-semibold text-zinc-900">Teléfono</label>
           <input
             id="telefono"
             name="telefono"
-            class="w-full rounded-lg border border-slate-300 px-4 py-2.5 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 focus:outline-none"
+            class="w-full rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2.5 text-white placeholder-zinc-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 focus:outline-none"
           />
         </div>
       </div>
 
       <div>
-        <label for="mensaje" class="mb-1.5 block text-sm font-medium">Describe tu requerimiento</label>
+        <label for="mensaje" class="mb-1.5 block text-sm font-semibold text-zinc-900">Describe tu requerimiento</label>
         <textarea
           id="mensaje"
           name="mensaje"
           rows="4"
           required
           placeholder="Material, cantidad, medidas, plazo…"
-          class="w-full rounded-lg border border-slate-300 px-4 py-2.5 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 focus:outline-none"></textarea>
+          class="w-full rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2.5 text-white placeholder-zinc-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 focus:outline-none"></textarea>
       </div>
 
       <button
         type="submit"
         id="submitBtn"
-        class="w-full rounded-lg bg-steel-950 px-6 py-3.5 font-semibold text-white transition hover:bg-steel-800"
+        class="w-full rounded-lg bg-[#eeb420] px-6 py-3.5 font-semibold uppercase tracking-wide text-black transition hover:brightness-95"
       >
         <span>Enviar solicitud</span>
       </button>
 
-      <p id="formEstado" class="hidden rounded-lg p-4 text-sm"></p>
+      <p id="formEstado" class="hidden rounded-lg border p-4 text-sm"></p>
     </form>
   </div>
 </section>
@@ -127,22 +132,22 @@ const actionUrl = `${basePath}/contacto.php`;
       const result = await response.json();
 
       if (estado) {
-        estado.classList.remove("hidden", "bg-red-50", "text-red-700", "bg-green-50", "text-green-700");
+        estado.classList.remove("hidden", "bg-red-500/10", "text-red-700", "border-red-500/40", "bg-brand-500/15", "text-brand-700", "border-brand-500/40");
         estado.textContent = result.message;
 
         if (result.success) {
-          estado.classList.add("bg-green-50", "text-green-700");
+          estado.classList.add("bg-brand-500/15", "text-brand-700", "border-brand-500/40");
           form.reset();
         } else {
-          estado.classList.add("bg-red-50", "text-red-700");
+          estado.classList.add("bg-red-500/10", "text-red-700", "border-red-500/40");
         }
 
         estado.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     } catch (err) {
       if (estado) {
-        estado.classList.remove("hidden", "bg-green-50", "text-green-700");
-        estado.classList.add("bg-red-50", "text-red-700");
+        estado.classList.remove("hidden", "bg-brand-500/15", "text-brand-700", "border-brand-500/40");
+        estado.classList.add("bg-red-500/10", "text-red-700", "border-red-500/40");
         estado.textContent = "Error de conexión. Por favor intenta nuevamente.";
         estado.scrollIntoView({ behavior: "smooth", block: "center" });
       }
@@ -169,4 +174,5 @@ const actionUrl = `${basePath}/contacto.php`;
     opacity: 0.7;
     cursor: not-allowed;
   }
+
 </style>
