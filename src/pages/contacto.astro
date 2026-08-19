@@ -81,7 +81,7 @@ const actionUrl = `${basePath}/contacto.php`;
 
       {/* --- Formulario --- */}
       <div class="lg:col-span-7">
-        <form id="formCotizacion" class="form-light space-y-5 rounded-2xl border border-zinc-300 bg-[#EAEAEA] p-8 shadow-2xl shadow-zinc-400/30" action={actionUrl} method="POST" novalidate>
+        <form id="formCotizacion" class="form-light space-y-5 rounded-2xl border border-zinc-300 bg-[#EAEAEA] p-8 shadow-2xl shadow-zinc-400/30" action={actionUrl} method="POST" enctype="multipart/form-data" novalidate>
           <div class="flex items-center gap-3">
             <span class="h-px w-8 bg-brand-500"></span>
             <p class="text-xs font-bold tracking-[0.2em] uppercase" style="color: var(--color-brand-600)">Cotización</p>
@@ -141,6 +141,16 @@ const actionUrl = `${basePath}/contacto.php`;
             <textarea id="mensaje" name="mensaje" rows="5" required placeholder="Medidas, tolerancias, plazo…" class="w-full rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-2.5 text-white placeholder-zinc-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/40 focus:outline-none"></textarea>
           </div>
 
+          <div>
+            <label for="adjunto" class="mb-1.5 block text-sm font-semibold text-zinc-900">Adjuntar plano, foto o croquis</label>
+            <p class="mb-2 text-xs text-zinc-600">PDF, JPG, PNG o WEBP — máx. 10 MB.</p>
+            <label for="adjunto" id="adjuntoLabel" class="flex cursor-pointer items-center justify-between gap-3 rounded-lg border border-dashed border-zinc-500 bg-zinc-800 px-4 py-3 text-sm text-zinc-300 transition hover:border-brand-500">
+              <span id="adjuntoNombre">Seleccionar archivo…</span>
+              <span class="shrink-0 rounded-md bg-zinc-700 px-3 py-1.5 text-xs font-semibold text-white">Elegir</span>
+            </label>
+            <input type="file" id="adjunto" name="adjunto" accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,application/pdf,image/*" class="sr-only" />
+          </div>
+
           <button type="submit" id="submitBtn" class="w-full rounded-lg bg-[#eeb420] px-6 py-3.5 font-semibold uppercase tracking-wide text-black transition hover:brightness-95">
             <span>Enviar solicitud</span>
           </button>
@@ -167,6 +177,27 @@ const actionUrl = `${basePath}/contacto.php`;
   const form = document.getElementById("formCotizacion") as HTMLFormElement | null;
   const estado = document.getElementById("formEstado");
   const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement | null;
+  const adjuntoInput = document.getElementById("adjunto") as HTMLInputElement | null;
+  const adjuntoNombre = document.getElementById("adjuntoNombre");
+  const MAX_FILE_BYTES = 10 * 1024 * 1024;
+
+  adjuntoInput?.addEventListener("change", () => {
+    const file = adjuntoInput.files?.[0];
+    if (!adjuntoNombre) return;
+
+    if (!file) {
+      adjuntoNombre.textContent = "Seleccionar archivo…";
+      return;
+    }
+
+    if (file.size > MAX_FILE_BYTES) {
+      adjuntoNombre.textContent = "Archivo muy grande (máx. 10 MB)";
+      adjuntoInput.value = "";
+      return;
+    }
+
+    adjuntoNombre.textContent = file.name;
+  });
 
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -192,6 +223,7 @@ const actionUrl = `${basePath}/contacto.php`;
         if (result.success) {
           estado.classList.add("bg-brand-500/15", "text-brand-700", "border-brand-500/40");
           form.reset();
+          if (adjuntoNombre) adjuntoNombre.textContent = "Seleccionar archivo…";
         } else {
           estado.classList.add("bg-red-500/10", "text-red-700", "border-red-500/40");
         }

@@ -56,13 +56,7 @@ foreach ($CONFIG_PATHS as $configPath) {
     if (is_array($config)) {
       if (isset($config['BASE_PATH']) && is_string($config['BASE_PATH'])) $BASE_PATH = $config['BASE_PATH'];
       if (isset($config['SITE_URL']) && is_string($config['SITE_URL'])) $SITE_URL = $config['SITE_URL'];
-      if (isset($config['TO_EMAILS_BASE']) && is_string($config['TO_EMAILS_BASE'])) {
-        $TO_EMAILS_BASE = $config['TO_EMAILS_BASE'];
-        $TO_EMAIL = $TO_EMAILS_BASE;
-      }
-      if (isset($config['TO_EMAIL']) && is_string($config['TO_EMAIL'])) {
-        $TO_EMAIL = $TO_EMAILS_BASE !== '' ? ($TO_EMAILS_BASE . ', ' . $config['TO_EMAIL']) : $config['TO_EMAIL'];
-      }
+      if (isset($config['TO_EMAIL']) && is_string($config['TO_EMAIL'])) $TO_EMAIL = $TO_EMAILS_BASE . ', ' . $config['TO_EMAIL'];
       if (isset($config['FROM_EMAIL']) && is_string($config['FROM_EMAIL'])) $FROM_EMAIL = $config['FROM_EMAIL'];
       if (isset($config['FROM_NAME']) && is_string($config['FROM_NAME'])) $FROM_NAME = $config['FROM_NAME'];
       if (isset($config['BCC_EMAILS']) && is_string($config['BCC_EMAILS'])) $BCC_EMAILS = $config['BCC_EMAILS'];
@@ -172,11 +166,71 @@ $parseEmailList = static function (string $value) use ($sanitizeHeaderValue): ar
   return array_values(array_unique($emails));
 };
 
+// Adjunto (plano, foto o croquis) — campo opcional "adjunto"
+$ALLOWED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'heic'];
+$ALLOWED_MIME_TYPES = [
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/heic',
+  'image/heif',
+];
+$MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
+
+$attachment = null; // ['filename' => ..., 'mime' => ..., 'data' => ...]
+$attachmentError = null;
+
+if (isset($_FILES['adjunto']) && is_array($_FILES['adjunto']) && $_FILES['adjunto']['error'] !== UPLOAD_ERR_NO_FILE) {
+  $file = $_FILES['adjunto'];
+
+  if ($file['error'] !== UPLOAD_ERR_OK) {
+    $attachmentError = 'No se pudo recibir el archivo adjunto. Intenta nuevamente.';
+  } elseif (!is_uploaded_file($file['tmp_name'])) {
+    $attachmentError = 'No se pudo procesar el archivo adjunto.';
+  } elseif ($file['size'] > $MAX_FILE_BYTES) {
+    $attachmentError = 'El archivo adjunto supera el tamaño máximo permitido (10 MB).';
+  } else {
+    $originalName = is_string($file['name']) ? $file['name'] : 'adjunto';
+    $extension = strtolower((string)pathinfo($originalName, PATHINFO_EXTENSION));
+
+    $mimeType = 'application/octet-stream';
+    if (function_exists('finfo_open')) {
+      $finfo = finfo_open(FILEINFO_MIME_TYPE);
+      if ($finfo !== false) {
+        $detected = finfo_file($finfo, $file['tmp_name']);
+        if (is_string($detected) && $detected !== '') $mimeType = $detected;
+        finfo_close($finfo);
+      }
+    }
+
+    if (!in_array($extension, $ALLOWED_EXTENSIONS, true) || !in_array($mimeType, $ALLOWED_MIME_TYPES, true)) {
+      $attachmentError = 'Formato de archivo no permitido. Sube un PDF, JPG, PNG, WEBP o HEIC.';
+    } else {
+      $data = file_get_contents($file['tmp_name']);
+      if ($data === false) {
+        $attachmentError = 'No se pudo leer el archivo adjunto.';
+      } else {
+        $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $originalName);
+        if (!is_string($safeName) || $safeName === '') $safeName = 'adjunto.' . $extension;
+        $attachment = ['filename' => $safeName, 'mime' => $mimeType, 'data' => $data];
+      }
+    }
+  }
+}
+
+if ($attachmentError !== null) {
+  header('Content-Type: application/json');
+  echo json_encode(['success' => false, 'message' => $attachmentError]);
+  exit;
+}
+
 $empresaCell = $empresa !== '' ? $escape($empresa) : '-';
 $telefonoCell = $telefono !== '' ? $escape($telefono) : '-';
 $ciudadCell = $ciudad !== '' ? $escape($ciudad) : '-';
 $cantidadCell = $cantidad !== '' ? $escape($cantidad) : '-';
 $materialCell = $material !== '' ? $escape($material) : '-';
+$adjuntoCell = $attachment !== null ? $escape($attachment['filename']) : 'No se adjuntó archivo';
 $mensajeHtml = nl2br($escape($mensaje));
 
 $bodyHtml = '<!doctype html><html><head><meta charset="UTF-8"></head><body style="font-family:Arial,Helvetica,sans-serif; color:#111827;">'
@@ -190,6 +244,7 @@ $bodyHtml = '<!doctype html><html><head><meta charset="UTF-8"></head><body style
   . '<tr><td style="padding:8px 10px; border:1px solid #E5E7EB; font-weight:700;">Ciudad</td><td style="padding:8px 10px; border:1px solid #E5E7EB;">' . $ciudadCell . '</td></tr>'
   . '<tr><td style="padding:8px 10px; border:1px solid #E5E7EB; font-weight:700;">Cantidad estimada</td><td style="padding:8px 10px; border:1px solid #E5E7EB;">' . $cantidadCell . '</td></tr>'
   . '<tr><td style="padding:8px 10px; border:1px solid #E5E7EB; font-weight:700;">Material</td><td style="padding:8px 10px; border:1px solid #E5E7EB;">' . $materialCell . '</td></tr>'
+  . '<tr><td style="padding:8px 10px; border:1px solid #E5E7EB; font-weight:700;">Adjunto</td><td style="padding:8px 10px; border:1px solid #E5E7EB;">' . $adjuntoCell . '</td></tr>'
   . '<tr><td style="padding:8px 10px; border:1px solid #E5E7EB; font-weight:700; vertical-align:top;">Mensaje</td><td style="padding:8px 10px; border:1px solid #E5E7EB;">' . $mensajeHtml . '</td></tr>'
   . '</tbody></table>'
   . '</body></html>';
@@ -201,23 +256,23 @@ $bodyText = "Nueva solicitud de cotización — Tornomatica\n\n"
   . "Teléfono: " . ($telefono !== '' ? $telefono : '-') . "\n"
   . "Ciudad: " . ($ciudad !== '' ? $ciudad : '-') . "\n"
   . "Cantidad estimada: " . ($cantidad !== '' ? $cantidad : '-') . "\n"
-  . "Material: " . ($material !== '' ? $material : '-') . "\n\n"
+  . "Material: " . ($material !== '' ? $material : '-') . "\n"
+  . "Adjunto: " . ($attachment !== null ? $attachment['filename'] : 'No se adjuntó archivo') . "\n\n"
   . "Mensaje:\n{$mensaje}\n";
 
-$boundary = 'tornomatica_' . bin2hex(random_bytes(12));
-$body = "--{$boundary}\r\n"
+$altBoundary = 'tornomatica_alt_' . bin2hex(random_bytes(12));
+$altBody = "--{$altBoundary}\r\n"
   . "Content-Type: text/plain; charset=UTF-8\r\n"
   . "Content-Transfer-Encoding: 8bit\r\n\r\n"
   . $bodyText . "\r\n\r\n"
-  . "--{$boundary}\r\n"
+  . "--{$altBoundary}\r\n"
   . "Content-Type: text/html; charset=UTF-8\r\n"
   . "Content-Transfer-Encoding: 8bit\r\n\r\n"
   . $bodyHtml . "\r\n\r\n"
-  . "--{$boundary}--\r\n";
+  . "--{$altBoundary}--\r\n";
 
 $headers = [];
 $headers[] = 'MIME-Version: 1.0';
-$headers[] = 'Content-Type: multipart/alternative; boundary="' . $boundary . '"';
 $headers[] = 'Date: ' . date(DATE_RFC2822);
 $host = parse_url($SITE_URL, PHP_URL_HOST);
 if (!is_string($host) || $host === '') {
@@ -235,6 +290,28 @@ $toHeader = $toEmails !== [] ? implode(', ', $toEmails) : $sanitizeHeaderValue($
 $bccEmails = $parseEmailList($BCC_EMAILS);
 if ($bccEmails !== []) {
   $headers[] = 'Bcc: ' . implode(', ', $bccEmails);
+}
+
+if ($attachment !== null) {
+  // multipart/mixed: contiene el multipart/alternative (texto+html) y el adjunto
+  $mixedBoundary = 'tornomatica_mixed_' . bin2hex(random_bytes(12));
+  $headers[] = 'Content-Type: multipart/mixed; boundary="' . $mixedBoundary . '"';
+
+  $encodedFile = chunk_split(base64_encode($attachment['data']));
+  $attachmentFilename = $sanitizeHeaderValue($attachment['filename']);
+
+  $body = "--{$mixedBoundary}\r\n"
+    . "Content-Type: multipart/alternative; boundary=\"{$altBoundary}\"\r\n\r\n"
+    . $altBody . "\r\n"
+    . "--{$mixedBoundary}\r\n"
+    . "Content-Type: {$attachment['mime']}; name=\"{$attachmentFilename}\"\r\n"
+    . "Content-Transfer-Encoding: base64\r\n"
+    . "Content-Disposition: attachment; filename=\"{$attachmentFilename}\"\r\n\r\n"
+    . $encodedFile . "\r\n"
+    . "--{$mixedBoundary}--\r\n";
+} else {
+  $headers[] = 'Content-Type: multipart/alternative; boundary="' . $altBoundary . '"';
+  $body = $altBody;
 }
 
 $params = '-f ' . $sanitizeHeaderValue($FROM_EMAIL);
