@@ -7,7 +7,7 @@ export const site = {
   telefonoHref: "tel:+56991630500",
   telefono2: "+56 9 9325 3868",
   telefono2Href: "tel:+56993253868",
-  whatsapp: "https://wa.me/56993253868",
+  whatsapp: "https://wa.me/56991630500",
   email: "info@tornomatica.cl",
   direccion: "San Luis #410, Alto Jahuel, Buin — Santiago, Chile",
   mapa:
