@@ -3,10 +3,10 @@ export const FUNDACION = 1997;
 export const site = {
   nombre: "Tornomatica",
   tagline: "Partes y piezas de precisión",
-  telefono: "+56 9 9325 3868",
-  telefonoHref: "tel:+56993253868",
-  telefono2: "+56 9 9163 0500",
-  telefono2Href: "tel:+56991630500",
+  telefono: "+56 9 9163 0500",
+  telefonoHref: "tel:+56991630500",
+  telefono2: "+56 9 9325 3868",
+  telefono2Href: "tel:+56993253868",
   whatsapp: "https://wa.me/56993253868",
   email: "info@tornomatica.cl",
   direccion: "San Luis #410, Alto Jahuel, Buin — Santiago, Chile",
@@ -22,7 +22,6 @@ export const contactos = [
   { rol: "Informaciones", email: "info@tornomatica.cl" },
   { rol: "Gerencia comercial", email: "bego.gredilla@tornomatica.cl" },
   { rol: "Gerencia general", email: "jgredilla@tornomatica.cl" },
-  { rol: "Gerencia", email: "gerencia@tornomatica.cl" },
 ];
 
 export const nav = [
