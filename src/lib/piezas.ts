@@ -24,6 +24,8 @@ interface WPPieza {
     acabado?: string;
     // ACF puede devolver la URL, el ID, o el objeto completo del adjunto
     plano_pdf?: string | number | { url?: string };
+    // Con return_format "url" el campo gallery entrega directo un array de URLs
+    galeria?: string[];
     destacada?: boolean;
   };
   _embedded?: {
@@ -87,6 +89,7 @@ function mapear(p: WPPieza): Pieza {
     material,
     medida: acf.medida || undefined,
     imagen: media?.source_url,
+    imagenes: Array.isArray(acf.galeria) ? acf.galeria.filter(Boolean) : undefined,
     pdf: urlDePlano(acf.plano_pdf),
   };
 }

@@ -126,6 +126,16 @@ add_action('acf/init', function () {
                 'mime_types'    => 'pdf',
             ],
             [
+                'key'           => 'field_pieza_galeria',
+                'label'         => 'Galería de imágenes',
+                'name'          => 'galeria',
+                'type'          => 'gallery',
+                'instructions'  => 'Fotos adicionales de la pieza (además de la imagen destacada). El orden acá define el orden en la web.',
+                'return_format' => 'url',
+                'preview_size'  => 'medium',
+                'mime_types'    => 'jpg,jpeg,png,webp',
+            ],
+            [
                 'key'   => 'field_pieza_destacada',
                 'label' => 'Destacar en la home',
                 'name'  => 'destacada',

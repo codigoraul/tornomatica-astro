@@ -274,6 +274,8 @@ export interface Pieza {
   material?: string;
   medida?: string;
   imagen?: string;
+  /** Fotos adicionales, aparte de la imagen destacada. */
+  imagenes?: string[];
   pdf?: string;
   porConfirmar?: boolean;
 }
